@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: niqabapp-deployment
+  namespace: niqabservices
+  labels:
+    app: niqabapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: niqabapp
+  template:
+    metadata:
+      labels:
+        app: niqabapp
+    spec:
+      containers:
+      - name: niqabapp
+        image: niqabhackacr.azurecr.io/niqabhack:v5
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 1000m
+          limits:
+            cpu: 1500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: niqabapp-service
+  namespace: niqabservices
+  labels:
+    app: niqabapp  
+spec:
+  selector:
+    app: niqabapp
+  ports:
+    - port: 80
+  type: LoadBalancer
